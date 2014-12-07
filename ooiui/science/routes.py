@@ -86,7 +86,8 @@ def getTocLayout():
             tree_dict[array]=[]
             
             for platform_name in sorted(data[array].keys()):
-                plat = {"title":platform_name,"type":"platform"}
+                display_name = data[array][platform_name]['display_name']
+                plat = {"id" : platform_name, "title":display_name,"type":"platform"}
                 for f in platform_fields:
                     try:
                         v = data[array][platform_name][f]      
@@ -101,22 +102,28 @@ def getTocLayout():
                 for instrument_name in data[array][platform_name]["instruments"]:
                     
                     instrument_key =  instrument_name
-                    instru = {"title":instrument_key,"type":"instrument","folder": True,"children":[]}                                    
+                    instrument_display_name = data[array][platform_name]['instruments'][instrument_name]['display_name']
+                    instru = {"id" : instrument_key, "title":instrument_display_name or instrument_key,"type":"instrument","folder": True,"children":[]}                                    
                     
-                    for stream_id in data[array][platform_name]["instruments"][instrument_key]:
+                    for stream_id in data[array][platform_name]["instruments"][instrument_key]['streams']:
                         stream_name = stream_id             
                         stream = {"title":stream_name,"type":"stream","folder": True,"children":[]}
-                        for param_id in data[array][platform_name]["instruments"][instrument_key][stream_id]:
+                        for param_id in data[array][platform_name]["instruments"][instrument_key]['streams'][stream_id]:
                             param = {"title":param_id,"type":"parameter","folder": False,"children":[]}
                             stream["children"].append(param)
                             
                         instru["children"].append(stream)
+
+                    if instru["children"]:
+                        plat["children"].append(instru)
+
                         
-                    plat["children"].append(instru)
                     
                 #print plat,"\n",platform_name,data[array][platform_name]
                 
-                tree_dict[array].append(plat)
+                if plat["children"]:
+                    tree_dict[array].append(plat)
+
             #print tree_dict
         with open('toc.json', 'w') as outfile:
             json.dump(tree_dict, outfile)
