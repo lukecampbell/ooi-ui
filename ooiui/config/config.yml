@@ -3,4 +3,5 @@ ERDDAP_URL: http://data-test.ooi.rutgers.edu/erddap
 SERVICES_URL: http://localhost:4000
 DEBUG: False
 CACHE_TYPE: simple
+SERVICES_CONFIG: ../datasets.yml
 
