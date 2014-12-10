@@ -90,8 +90,7 @@ def update_erddap(dir_path):
         f.write(yaml.dump(doc, default_flow_style=False))
 
 
-    response['status'] = 'ok'
-    response['path'] = dir_path
-    response = Response(response=json.dumps(response), status=200, mimetype='application/json')
+    response = requests.get('%s/generate_catalog' % SERVICES_URL)
+    response = Response(response=response.text, status=response.status_code, mimetype='application/json')
     return response
 
