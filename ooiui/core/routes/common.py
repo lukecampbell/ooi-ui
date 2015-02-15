@@ -9,8 +9,7 @@ from uuid import uuid4
 def get_login():
     token = request.cookies.get('ooiusertoken')
     if not token:
-        response = Response(status=401, mimetype='application/json', response=jsonify(error='Invalid Token'))
-        raise Unauthorized(description="Invalid token", response=response)
+        return None
     token = urllib.unquote(token).decode('utf8')
     return token
 

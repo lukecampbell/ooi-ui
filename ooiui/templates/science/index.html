@@ -136,7 +136,6 @@ _.extend(OOI.prototype, Backbone.Events, {
       width: divwidth - 20,
       el: $('#plot-view')
     });
-    this.trigger('ooi:mapExpand');
     //--------------------------------------------------------------------------------
     // Collections Fetch
     //--------------------------------------------------------------------------------
@@ -171,7 +170,11 @@ _.extend(OOI.prototype, Backbone.Events, {
       $('#plot-row').hide();
       $('#map').height($(window).height() - 150);
     });
+    this.listenTo(this, 'NavbarView:sidebarToggle', function() {
+      self.views.mapView.render();
+    });
 
+    this.trigger('ooi:mapExpand');
   }
 });
 var ooi = new OOI();

@@ -90,6 +90,8 @@
     </div> <!-- .content-fluid -->
     <div id="annotation-modal">
     </div>
+    <div id="stream-download-modal">
+    </div>
   </div> <!-- #page-content-wrapper -->
 </div> <!-- #wrapper -->
 
@@ -138,6 +140,9 @@ _.extend(OOI.prototype, Backbone.Events, {
     this.views.annotationModal = new AnnotationModalFormView({
       el: $('#annotation-modal')
     });
+    this.views.streamDownloadFormView = new StreamDownloadFormView({
+      el: $('#stream-download-modal')
+    });
 
     this.collections.annotations.fetch({reset: true});
     this.collections.streams.fetch({reset:true});
@@ -175,7 +180,8 @@ _.extend(OOI.prototype, Backbone.Events, {
       annotation.set('pos_x', xdate);
       annotation.set('pos_y', record[yvar]);
       annotation.set('value', record[yvar]);
-      if(self.login.loggedIn()) {
+      console.log(self.models.userModel.get('scopes'));
+      if(self.models.userModel.get('scopes').indexOf('annotate') >= 0) {
         console.log("Trying to show");
         self.views.annotationModal.show({
           model: annotation,
@@ -216,8 +222,15 @@ _.extend(OOI.prototype, Backbone.Events, {
     });
 
     this.listenTo(this, 'ooi:streamSearch', function(searchTerm) {
-      self.views.streamTableView.search(searchTerm);
-      $('#stream-search').val('');
+      if(searchTerm == '') {
+        self.views.streamTableView.render();
+      } else {
+        self.views.streamTableView.search(searchTerm);
+        $('#stream-search').val('');
+      }
+    });
+    this.listenTo(this, 'StreamTableItemView:onClick', function(options) {
+      self.views.streamDownloadFormView.show(options);
     });
   }
 });

@@ -118,17 +118,17 @@ def stream_proxy():
 @app.route('/api/uframe/get_csv/<string:stream_name>/<string:reference_designator>')
 def get_csv(stream_name, reference_designator):
     req = requests.get(app.config['SERVICES_URL'] + '/uframe/get_csv/%s/%s' % (stream_name, reference_designator), stream=True)
-    return Response(stream_with_context(req.iter_content(chunk_size=1024*1024*4)), headers={'Content-Type' : 'text/csv'})
+    return Response(stream_with_context(req.iter_content(chunk_size=1024*1024*4)), headers=dict(req.headers))
 
 @app.route('/api/uframe/get_json/<string:stream_name>/<string:reference_designator>')
 def get_json(stream_name, reference_designator):
     req = requests.get(app.config['SERVICES_URL'] + '/uframe/get_json/%s/%s' % (stream_name, reference_designator), stream=True)
-    return Response(stream_with_context(req.iter_content(chunk_size=1024*1024*4)), headers={'Content-Type' : 'application/json'})
+    return Response(stream_with_context(req.iter_content(chunk_size=1024*1024*4)), headers=dict(req.headers))
 
 @app.route('/api/uframe/get_netcdf/<string:stream_name>/<string:reference_designator>')
 def get_netcdf(stream_name, reference_designator):
     req = requests.get(app.config['SERVICES_URL'] + '/uframe/get_netcdf/%s/%s' % (stream_name, reference_designator), stream=True)
-    return Response(stream_with_context(req.iter_content(chunk_size=1024*1024*4)), headers={'Content-Type' : 'application/x-netcdf'})
+    return Response(stream_with_context(req.iter_content(chunk_size=1024*1024*4)), headers=dict(req.headers))
 
 @app.route('/svg/plot/<string:instrument>/<string:stream>', methods=['GET'])
 def get_plotdemo(instrument, stream):

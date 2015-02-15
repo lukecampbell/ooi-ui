@@ -36,8 +36,9 @@ var SVGPlotView = SVGView.extend({
     var variables = this.model.get('variable_types');
     this.variable = null;
     for(var key in variables) {
-      if(variables[key] == 'int' || variables[key] == 'float') {
+      if(key.indexOf('timestamp') == -1 && (variables[key] == 'int' || variables[key] == 'float')) {
         this.variable = key;
+        break;
       }
     }
     if(this.variable != null) {
